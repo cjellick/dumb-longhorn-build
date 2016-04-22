@@ -1,10 +1,14 @@
 #!/bin/bash
 
-if [ ! -d /sys/kernel/config ]; then
-    modprobe target_core_user
-fi
+set -x
 
-mount --rbind /host/dev /dev
-mount -t configfs none /sys/kernel/config
+if [ "$1" == "controller" ]; then
+  if [ ! -d /sys/kernel/config ]; then
+    modprobe target_core_user
+  fi
+
+  mount --rbind /host/dev /dev
+  mount -t configfs none /sys/kernel/config
+fi
 
 exec longhorn "$@"
